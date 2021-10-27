@@ -1,8 +1,11 @@
 package parasys.superstore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Customer {
 
-    private ArrayList<Basket> _baskets;
+    private List<Basket> _baskets;
 
     public Customer(){
         _baskets = new ArrayList<>(){};

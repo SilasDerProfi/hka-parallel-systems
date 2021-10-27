@@ -1,4 +1,4 @@
-package parasys.reversevendingmachine;
+package parasys.superstore;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
