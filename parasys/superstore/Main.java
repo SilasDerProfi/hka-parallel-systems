@@ -6,6 +6,8 @@ package parasys.superstore;
 public class Main {
 
     public static void main(String[] args) {
+        var myFavouriteStore = new SuperStore("Cloud 9 Store #1217 - Ozark Highlands");
         
-    }// Umsetzen mit Threads, synchronized, wait und notify   
+        myFavouriteStore.OpenTheDoors();
+    }   
 }

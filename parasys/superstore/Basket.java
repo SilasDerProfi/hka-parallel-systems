@@ -2,10 +2,9 @@ package parasys.superstore;
 
 public class Basket {
 
-    private int _dischargeDuration;
+    private double _dischargeDuration;
 
     public Basket(){
-        _dischargeDuration = 6;
-        // dauert Random 2 - 6 Sekunden
+        _dischargeDuration = Math.random() * 4 + 2;
     }
 }
