@@ -1,4 +1,4 @@
-Only 21 & 36 have to wait
+´Only 21 & 36 have to wait
 
 Opening        [Cloud 9 Store #1217 - Ozark Highlands]
 Entering       [Customer #1]
@@ -297,4 +297,4 @@ End Deposit    [Customer #50, Machine #3]
 Leaving        [Customer #50]
 Deposited      [Customer #48, Basket #3, Machine #1]
 End Deposit    [Customer #48, Machine #1]
-Leaving        [Customer #48]
+Leaving        [Customer #48]´
