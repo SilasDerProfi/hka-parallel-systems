@@ -13,3 +13,8 @@ public class Main {
         myFavouriteStore.OpenTheDoors();
     }
 }
+
+// Copilot
+// Tab -> Vorschlag annehmen
+// Alt + ´ -> nächster Vorschlag
+// Strg + Enter -> Vorschlag auswählen
