@@ -2,14 +2,19 @@ package parasys.executorstore;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 public class SuperStore {
 
     private final String _name;
     private final ReverseVendingMachine[] _reverseVendingMachines;
-    private LinkedBlockingQueue<Customer> _customers;
+    private final ReentrantLock _queueLock = new ReentrantLock();
+    private final Condition _queueLockCondition = _queueLock.newCondition();
+    private ExecutorService _customerPool = Executors.newFixedThreadPool(50);
 
     public SuperStore(String name) {
         _name = name;
@@ -22,43 +27,44 @@ public class SuperStore {
     public void OpenTheDoors() {
         Logger.log("Opening", this);
 
-        _customers = new LinkedBlockingQueue<>();
-
         for (var customerNumber = 1; customerNumber <= 50; customerNumber++) {
-
-            var newCustomer = new Customer(customerNumber);
-            newCustomer.EnterStore(this);
-            _customers.add(newCustomer);
+            _customerPool.execute(new Customer(customerNumber, this));
 
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                System.out.println("exception...");
+                System.out.println("The customer is in hurry and can't wait 3 seconds.");
             }
         }
+
+        _customerPool.shutdown();
     }
 
     public void DepositBottles(List<Basket> _baskets) {
 
         ReverseVendingMachine availableMachine;
-        synchronized (this) {
+        try {
+            _queueLock.lock();
             if (Arrays.stream(_reverseVendingMachines).allMatch(m -> m.GetInUse())) {
                 try {
-                    wait();
+                    _queueLockCondition.await();
                 } catch (InterruptedException e) {
                     Logger.log("A customer died");
                 }
             }
-
             availableMachine = Arrays.stream(_reverseVendingMachines).filter(m -> !m.GetInUse()).findFirst().get();
             availableMachine.SetInUse(true);
+        } finally {
+            _queueLock.unlock();
         }
 
         availableMachine.DepositBottles(_baskets);
-
-        synchronized (this) {
+        try {
+            _queueLock.lock();
             availableMachine.SetInUse(false);
-            notify();
+            _queueLockCondition.signal();
+        } finally {
+            _queueLock.unlock();
         }
     }
 
